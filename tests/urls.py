@@ -40,6 +40,8 @@ router.register('replaceable-students-with-alias', views.ReplaceableStudentWithA
 router.register('writable-students', views.WritableStudentViewSet, 'wstudent')
 router.register('writable-students-with-alias', views.WritableStudentWithAliasViewSet, 'wstudent_with_alias')
 
+router.register('nested-phones-with-acceptpkonly', views.NestedPhoneViewset, 'nphone')
+
 urlpatterns = [
     url('', include(router.urls))
 ]

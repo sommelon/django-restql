@@ -3018,3 +3018,35 @@ class DataQueryingAndMutationTests(APITestCase):
                 ]
             }
         )
+
+    def test_nested_phone(self):
+        url = reverse_lazy("nphone-list")
+        data = {
+            "number": "0909090900",
+            "type": "personal",
+            "student": {
+                "name": "John Depp",
+                "age": 45,
+                "course": 2
+            }
+        }
+
+        response = self.client.post(
+            url + '?query={-id, student{name, age, course}}',
+            data, format="json"
+        )
+
+        print(response.data)
+        self.assertEqual(response.status_code, 201)
+        # self.assertEqual(
+        #     response.data,
+        #     {
+        #         "number": "0909090900",
+        #         "type": "personal",
+        #         "student": {
+        #             "name": "John Depp",
+        #             "age": 45,
+        #             "course": 2
+        #         }
+        #     }
+        # )

@@ -9,7 +9,8 @@ from tests.testapp.serializers import (
     WritableStudentSerializer, WritableCourseSerializer,
     CourseWithAliasedBooksSerializer, CourseWithDynamicSerializerMethodField,
     StudentWithAliasSerializer, WritableStudentWithAliasSerializer,
-    ReplaceableStudentWithAliasSerializer, CourseWithDisableDynamicFieldsKwargSerializer
+    ReplaceableStudentWithAliasSerializer, CourseWithDisableDynamicFieldsKwargSerializer,
+    NestedPhoneSerializer
 )
 
 from django_restql.mixins import EagerLoadingMixin, QueryArgumentsMixin
@@ -131,3 +132,8 @@ class WritableStudentViewSet(viewsets.ModelViewSet):
 class WritableStudentWithAliasViewSet(viewsets.ModelViewSet):
     serializer_class = WritableStudentWithAliasSerializer
     queryset = Student.objects.all()
+
+
+class NestedPhoneViewset(viewsets.ModelViewSet):
+    serializer_class = NestedPhoneSerializer
+    queryset = Phone.objects.all()

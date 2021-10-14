@@ -174,3 +174,19 @@ class WritableStudentWithAliasSerializer(DynamicFieldsMixin, NestedModelSerializ
     class Meta:
         model = Student
         fields = ['name', 'age', 'program', 'contacts', 'study_partner', 'sport_mates']
+
+
+class NestedStudentSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    # course = NestedField(CourseSerializer)
+
+    class Meta:
+        model = Student
+        fields = '__all__'
+
+
+class NestedPhoneSerializer(DynamicFieldsMixin, NestedModelSerializer):
+    student = NestedField(NestedStudentSerializer)
+
+    class Meta:
+        model = Phone
+        fields = '__all__'
