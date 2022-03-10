@@ -1406,6 +1406,13 @@ class DataMutationTests(APITestCase):
             }
         )
 
+        refreshed_serializer = WritableStudentSerializer(
+            self.student.refresh_from_db(),
+            query='{name, age, course{name, books}, phone_numbers}'
+        )
+
+        self.assertEqual(serializer.data, refreshed_serializer.data)
+
     # **************** POST Tests ********************* #
 
     def test_post_on_pk_nested_foreignkey_related_field(self):
@@ -3117,16 +3124,16 @@ class DataQueryingAndMutationTests(APITestCase):
         )
 
         print(response.data)
-        self.assertEqual(response.status_code, 201)
-        # self.assertEqual(
-        #     response.data,
-        #     {
-        #         "number": "0909090900",
-        #         "type": "personal",
-        #         "student": {
-        #             "name": "John Depp",
-        #             "age": 45,
-        #             "course": 2
-        #         }
-        #     }
-        # )
+        # self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            response.data,
+            {
+                "number": "0909090900",
+                "type": "personal",
+                "student": {
+                    "name": "John Depp",
+                    "age": 45,
+                    "course": 2
+                }
+            }
+        )
