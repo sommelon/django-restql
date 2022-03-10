@@ -1406,13 +1406,6 @@ class DataMutationTests(APITestCase):
             }
         )
 
-        refreshed_serializer = WritableStudentSerializer(
-            self.student.refresh_from_db(),
-            query='{name, age, course{name, books}, phone_numbers}'
-        )
-
-        self.assertEqual(serializer.data, refreshed_serializer.data)
-
     # **************** POST Tests ********************* #
 
     def test_post_on_pk_nested_foreignkey_related_field(self):
@@ -2517,6 +2510,33 @@ class DataMutationTests(APITestCase):
             }
         )
 
+    def test_patch_with_create_operation(self):
+        url = reverse_lazy("wcourse-detail", args=[self.course2.id])
+        data = {
+            "name": "Data Structures",
+            "code": "CS410",
+            "books": {
+                "add": [2]
+            },
+            "instructor": {"name": "Professor Carr"}
+        }
+        response = self.client.patch(url, data, format="json")
+
+        expected_data = {
+            "name": "Data Structures",
+            "code": "CS410",
+            "books": [
+                {'title': 'Advanced Data Structures', 'author': 'S.Mobit', "genres": []},
+                {'title': 'Basic Data Structures', 'author': 'S.Mobit', "genres": []}
+            ],
+            "instructor": {"name": "Professor Carr"}
+        }
+        self.assertEqual(response.data, expected_data)
+
+        response = self.client.get(url, data, format="json")
+        print("Instructor value is:", response.data['instructor'])
+        self.assertEqual(response.data, expected_data)
+
     def test_patch_with_update_operation_missing_one_required_nested_field(self):
         url = reverse_lazy("wcourse-detail", args=[self.course2.id])
         data = {
@@ -3123,7 +3143,6 @@ class DataQueryingAndMutationTests(APITestCase):
             data, format="json"
         )
 
-        print(response.data)
         # self.assertEqual(response.status_code, 201)
         self.assertEqual(
             response.data,
